@@ -39,45 +39,45 @@ class _MyHomePageState extends State<MyHomePage> {
   int page = 1;
   bool _isFirst = true;
 
-  @override
-  void didChangeDependencies() {
-    if (_isFirst) {
-      final pixbayProvider = Provider.of<PixabayPhotos>(context, listen: false);
-      pixbayProvider.getPixabayPhotos(page, 20).then((_) {
-        photos = pixbayProvider.photos;
-      });
-    }
-
-    _isFirst = false;
-    super.didChangeDependencies();
-  }
-
   // @override
-  // void initState() {
-  //   Future.delayed(Duration.zero).then((_) async {
+  // void didChangeDependencies() {
+  //   if (_isFirst) {
   //     final pixbayProvider = Provider.of<PixabayPhotos>(context, listen: false);
-  //     await pixbayProvider.getPixabayPhotos(page, 20);
-  //     photos = pixbayProvider.photos;
-  //   }).catchError((error) {
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) {
-  //           return AlertDialog(
-  //             title: const Text('Error'),
-  //             content: const Text('Fail to fetch images from paxabay'),
-  //             actions: [
-  //               TextButton(
-  //                 onPressed: () {
-  //                   Navigator.of(context).pop();
-  //                 },
-  //                 child: const Text('OK'),
-  //               )
-  //             ],
-  //           );
-  //         });
-  //   });
-  //   super.initState();
+  //     pixbayProvider.getPixabayPhotos(page, 20).then((_) {
+  //       photos = pixbayProvider.photos;
+  //     });
+  //   }
+  //   _isFirst = false;
+  //   super.didChangeDependencies();
   // }
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero).then((_) async {
+      final pixbayProvider = Provider.of<PixabayPhotos>(context, listen: false);
+      await pixbayProvider.getPixabayPhotos(page, 20);
+      photos = pixbayProvider.photos;
+      setState(() {});
+    }).catchError((error) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Fail to fetch images from paxabay'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                )
+              ],
+            );
+          });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Provider.of<PixabayPhotos>(context, listen: false);
           await pixbayProvider.getPixabayPhotos(page, 20);
           photos = pixbayProvider.photos;
-
+          setState(() {});
           print("floating");
         },
         tooltip: 'Get More Images',
